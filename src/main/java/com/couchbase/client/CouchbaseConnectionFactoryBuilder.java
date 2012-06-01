@@ -46,6 +46,17 @@ import net.spy.memcached.transcoders.Transcoder;
 
 public class CouchbaseConnectionFactoryBuilder extends ConnectionFactoryBuilder{
 
+  /**
+   * Creates a new instance of the CouchbaseConnectionFactoryBuilder
+   *
+   * <p>Note that this overrides optimization to disable it.  Attempts to set
+   * shouldOptimize to true will fail.
+   */
+  public CouchbaseConnectionFactoryBuilder() {
+    super();
+    setShouldOptimize(false);
+  }
+
   private Config vBucketConfig;
 
   public Config getVBucketConfig() {
@@ -54,6 +65,15 @@ public class CouchbaseConnectionFactoryBuilder extends ConnectionFactoryBuilder{
 
   public void setVBucketConfig(Config config) {
     this.vBucketConfig = config;
+  }
+
+  @Override
+  public ConnectionFactoryBuilder setShouldOptimize(boolean optimizeRequest) {
+    if (optimizeRequest) {
+      throw new UnsupportedOperationException("Optimization not supported at"
+        + " this time");
+    }
+    return this;
   }
 
   /**
@@ -94,6 +114,7 @@ public class CouchbaseConnectionFactoryBuilder extends ConnectionFactoryBuilder{
   public CouchbaseConnectionFactory buildCouchbaseConnection(
       final List<URI> baseList, final String bucketName, final String usr,
       final String pwd) throws IOException {
+    setShouldOptimize(false);
     return new CouchbaseConnectionFactory(baseList, bucketName, pwd) {
 
       @Override
