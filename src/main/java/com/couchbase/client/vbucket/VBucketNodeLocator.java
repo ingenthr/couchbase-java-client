@@ -66,7 +66,7 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
    */
   @Override
   public MemcachedNode getPrimary(String k) {
-    TotalConfig totConfig = fullConfig.get();
+    TotalConfig totConfig = getFullConfig().get();
     Config config = totConfig.getConfig();
     Map<String, MemcachedNode> nodesMap = totConfig.getNodesMap();
     int vbucket = config.getVbucketByKey(k);
@@ -108,7 +108,7 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
    */
   @Override
   public Collection<MemcachedNode> getAll() {
-    Map<String, MemcachedNode> nodesMap = fullConfig.get().getNodesMap();
+    Map<String, MemcachedNode> nodesMap = getFullConfig().get().getNodesMap();
     return nodesMap.values();
   }
 
@@ -129,12 +129,12 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
       final Config newconf) {
     // we'll get a new config for various reasons we don't care about, so check
     // if we do care
-    Config current = fullConfig.get().getConfig();
+    Config current = getFullConfig().get().getConfig();
     ConfigDifference compareTo = current.compareTo(newconf);
     if (compareTo.isSequenceChanged() || compareTo.getVbucketsChanges() > 0) {
       getLogger().debug("Updating configuration, received updated configuration"
         + " with significant changes.");
-      fullConfig.set(new TotalConfig(newconf,
+      getFullConfig().set(new TotalConfig(newconf,
               fillNodesEntries(newconf, nodes)));
     } else {
       getLogger().debug("Received updated configuration with insignificant "
@@ -149,7 +149,7 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
    * @return vbucket index
    */
   public int getVBucketIndex(String key) {
-    Config config = fullConfig.get().getConfig();
+    Config config = getFullConfig().get().getConfig();
     return config.getVbucketByKey(key);
   }
 
@@ -206,7 +206,7 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
     // it's safe to only copy the map here, only removing references found to be
     // incorrect, and trying remaining
     Map<String, MemcachedNode> nodesMap =
-        new HashMap<String, MemcachedNode>(fullConfig.get().getNodesMap());
+        new HashMap<String, MemcachedNode>(getFullConfig().get().getNodesMap());
     Collection<MemcachedNode> nodes = nodesMap.values();
     nodes.removeAll(notMyVbucketNodes);
     if (nodes.isEmpty()) {
@@ -214,6 +214,13 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
     } else {
       return nodes.iterator().next();
     }
+  }
+
+  /**
+   * @return the fullConfig
+   */
+  protected AtomicReference<TotalConfig> getFullConfig() {
+    return fullConfig;
   }
 
   private class TotalConfig {
