@@ -100,9 +100,9 @@ public class OptimizedStoreVbucketTest extends ClientBaseCase {
     for (OperationFuture doneOpf : completed) {
       int times = 0;
       OperationStatus status;
-//      long startTime = System.currentTimeMillis();
-//      doneOpf.get();
-//      System.err.println("Time to get() from the future:" + (startTime - System.currentTimeMillis()));
+      long startTime = System.currentTimeMillis();
+      doneOpf.get();
+      System.err.println("Time to get() from the future:" + (startTime - System.currentTimeMillis()));
       status = doneOpf.getStatus();
       do {
 
