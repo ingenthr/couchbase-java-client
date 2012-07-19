@@ -148,6 +148,7 @@ public class CouchbaseConnectionFactory extends BinaryConnectionFactory {
     }
   }
 
+  @Override
   public AuthDescriptor getAuthDescriptor() {
     if (!configurationProvider.getAnonymousAuthBucket().equals(bucket)
         && bucket != null) {

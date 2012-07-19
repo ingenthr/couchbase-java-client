@@ -240,11 +240,12 @@
     <junit fork="yes" timeout="60000" failureproperty="junit.failure">
       <batchtest todir="${junit.dir}/data" fork="yes">
         <fileset dir="${test.dir}">
-          <include name="**/*Test.java"/>
+          <include name="**/*OptimizedStoreVbucketTest.java"/>
         </fileset>
       <formatter type="xml"/>
       </batchtest>
       <jvmarg value="-ea" />
+      <jvmarg line="-agentlib:jdwp=transport=dt_socket,address=localhost:8000,server=y,suspend=y" />
       <sysproperty key="server.address_v4" value="${server.address_v4}"/>
       <sysproperty key="server.address_v6" value="${server.address_v6}"/>
       <sysproperty key="server.type" value="${server.type}"/>
