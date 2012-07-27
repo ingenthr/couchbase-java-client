@@ -122,9 +122,17 @@ public class ViewTest {
       assert c.set(item.getKey(), 0,
           (String) item.getValue()).get().booleanValue();
     }
-    c.asyncHttpPut(docUri, view);
+    HttpFuture<String> asyncHttpPut = c.asyncHttpPut(docUri, view);
+    String response = asyncHttpPut.get();
+    OperationStatus status = asyncHttpPut.getStatus();
+    System.err.println("<><><><><><><>Operation Status is: " + status);
+    if (!status.isSuccess()) {
+      System.err.println("<><><><><><><>Operation Status is: " + status);
+      assert false : "Could not load views: " + status.getMessage() + " with response " + response;
+    }
     c.shutdown();
-    Thread.sleep(15000);
+    System.out.println("Setup of design docs complete, sleeping until they propogate.");
+    Thread.sleep(5000);
   }
 
   @Before
@@ -183,6 +191,7 @@ public class ViewTest {
     query.setIncludeDocs(true);
     query.setStale(Stale.FALSE);
     View view = client.getView(DESIGN_DOC_W_REDUCE, VIEW_NAME_W_REDUCE);
+    assert view != null : "Could not retrieve view";
     HttpFuture<ViewResponse> future = client.asyncQuery(view, query);
     ViewResponse response=null;
     try {
