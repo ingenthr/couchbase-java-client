@@ -29,11 +29,62 @@ import net.spy.memcached.BinaryClientTest;
 import net.spy.memcached.CASValue;
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.TestConfig;
+import org.junit.Before;
 
 /**
  * A CouchbaseClientTest.
  */
 public class CouchbaseClientTest extends BinaryClientTest {
+  @Override
+  @Before protected void setUp() throws Exception {
+    // delete the bucket if it exists, recreate it.
+    TestHttpClient hclient = new TestHttpClient();
+
+    assertTrue(hclient.doDeleteDefault());
+    Thread.sleep(5000);
+    assertTrue(hclient.doCreateDefault256());
+
+    boolean done = false;
+    int waiter = 0;
+    do {
+      waiter++;
+      if (waiter > 30) {
+        throw new RuntimeException("Could not create default bucket in 30 seconds.");
+      }
+      System.out.println("waiting on bucket creation...");
+      Thread.sleep(1000);
+      done = hclient.checkPoolsForComplete();
+    } while (!done);
+
+    super.setUp();
+
+  }
+
+  @Before
+  public void bucketCleaning() throws Exception {
+        // delete the bucket if it exists, recreate it.
+    TestHttpClient hclient = new TestHttpClient();
+
+    assertTrue(hclient.doDeleteDefault());
+    Thread.sleep(5000);
+    assertTrue(hclient.doCreateDefault256());
+
+    boolean done = false;
+    int waiter = 0;
+    do {
+      waiter++;
+      if (waiter > 30) {
+        throw new RuntimeException("Could not create default bucket in 30 seconds.");
+      }
+      System.out.println("waiting on bucket creation...");
+      Thread.sleep(1000);
+      done = hclient.checkPoolsForComplete();
+    } while (!done);
+
+    throw new Exception("Ack!!!!");
+
+  }
+
   @Override
   protected void initClient() throws Exception {
     initClient(new CouchbaseConnectionFactory(Arrays.asList(URI.create("http://"
