@@ -101,7 +101,8 @@ public class ViewNode extends SpyObject {
   public void doWrites() {
     HttpOperation op;
     try {
-      while ((op = writeQ.take()) != null) {
+      getLogger().debug("Will try to write view request to node: " + addr);
+      while ((op = writeQ.poll(50, TimeUnit.MILLISECONDS)) != null) {
         if (!op.isTimedOut() && !op.isCancelled()) {
           AsyncConnectionRequest connRequest = connMgr.requestConnection();
           try {
@@ -156,6 +157,7 @@ public class ViewNode extends SpyObject {
   }
 
   public void addOp(HttpOperation op) {
+    getLogger().debug("Adding an operation on the view node " + addr);
     try {
       if (!writeQ.offer(op, opQueueMaxBlockTime, TimeUnit.MILLISECONDS)) {
         throw new IllegalStateException("Timed out waiting to add " + op

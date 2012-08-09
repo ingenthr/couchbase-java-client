@@ -140,6 +140,7 @@ public class ViewConnection extends SpyThread  implements
 
   public void handleIO() {
     for (ViewNode node : couchNodes) {
+      getLogger().debug("Handling view IO on: " + node.getSocketAddress());
       node.doWrites();
     }
 
