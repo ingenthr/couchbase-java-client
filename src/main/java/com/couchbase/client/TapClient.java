@@ -80,6 +80,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    * @return The tap message at the head of the queue or null if the queue is
    *         empty for more than one second.
    */
+  @Override
   public ResponseMessage getNextMessage() {
     return getNextMessage(1, TimeUnit.SECONDS);
   }
@@ -92,6 +93,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    * @return The tap message at the head of the queue or null if the queue is
    *         empty for the given amount of time.
    */
+  @Override
   public ResponseMessage getNextMessage(long time, TimeUnit timeunit) {
     try {
       Object m = rqueue.poll(time, timeunit);
@@ -120,6 +122,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    * @return true if the client has tap responses or expects to have responses
    *         in the future. False otherwise.
    */
+  @Override
   public boolean hasMoreMessages() {
     if (!rqueue.isEmpty()) {
       return true;
@@ -159,6 +162,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    *           Couchbase cluster.
    * @throws IOException if there are errors connecting to the cluster.
    */
+  @Override
   public TapStream tapCustom(final String id, final RequestMessage message)
     throws ConfigurationException, IOException {
     final TapConnectionProvider conn = new TapConnectionProvider(baseList,
@@ -234,6 +238,11 @@ public class TapClient extends net.spy.memcached.TapClient {
     final TapConnectionProvider conn = new TapConnectionProvider(baseList,
         bucketName, pwd);
     final TapStream ts = new TapStream();
+
+    // target each of the nodes with the vbuckets they're repsonsible for
+
+
+
     conn.broadcastOp(new BroadcastOpFactory() {
       public Operation newOp(final MemcachedNode n,
           final CountDownLatch latch) {
@@ -292,6 +301,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    *           Couchbase cluster.
    * @throws IOException If there are errors connecting to the cluster.
    */
+  @Override
   public TapStream tapDump(final String id) throws IOException,
       ConfigurationException {
     final TapConnectionProvider conn = new TapConnectionProvider(baseList,
@@ -335,6 +345,7 @@ public class TapClient extends net.spy.memcached.TapClient {
   /**
    * Shuts down all tap streams that are currently running.
    */
+  @Override
   public void shutdown() {
     synchronized (omap) {
       for (Map.Entry<TapStream, net.spy.memcached.TapConnectionProvider> me
@@ -350,6 +361,7 @@ public class TapClient extends net.spy.memcached.TapClient {
    *
    * @return The number of messages read
    */
+  @Override
   public long getMessagesRead() {
     return messagesRead;
   }

@@ -124,7 +124,7 @@ public class ViewConnection extends SpyObject implements
               false)
           .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)
           .setParameter(CoreProtocolPNames.USER_AGENT,
-              "Couchbase Java Client 1.0.2");
+              "Couchbase Java Client 1.0.2");  <<<<<
 
       HttpProcessor httpproc =
           new ImmutableHttpProcessor(new HttpRequestInterceptor[] {

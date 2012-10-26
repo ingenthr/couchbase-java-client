@@ -25,6 +25,7 @@ package com.couchbase.client;
 import com.couchbase.client.vbucket.ConfigurationProvider;
 import com.couchbase.client.vbucket.Reconfigurable;
 import com.couchbase.client.vbucket.config.Bucket;
+import com.couchbase.client.vbucket.config.Config;
 
 import java.io.IOException;
 import java.net.URI;
@@ -69,7 +70,11 @@ public class TapConnectionProvider
    */
   public TapConnectionProvider(CouchbaseConnectionFactory cf)
     throws IOException, ConfigurationException{
-    super(cf, AddrUtil.getAddresses(cf.getVBucketConfig().getServers()));
+
+    Config vBucketConfig = cf.getVBucketConfig();
+    List<String> servers = vBucketConfig.getServers();
+
+//    super(cf, AddrUtil.getAddresses(cf.getVBucketConfig().getServers()));
     this.cf=cf;
     cp = cf.getConfigurationProvider();
     cp.subscribe(cf.getBucketName(), this);
