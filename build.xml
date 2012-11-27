@@ -239,7 +239,7 @@
     <junit fork="yes" timeout="5400000" failureproperty="junit.failure" showoutput="true">
       <batchtest todir="${junit.dir}/data" fork="yes">
         <fileset dir="${test.dir}">
-          <include name="**/*Test.java"/>
+          <include name="**/*TapTest.java"/>
         </fileset>
       <formatter type="xml"/>
       </batchtest>

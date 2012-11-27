@@ -74,7 +74,15 @@ public class TapConnectionProvider
     Config vBucketConfig = cf.getVBucketConfig();
     List<String> servers = vBucketConfig.getServers();
 
+    for (String server : servers) {
+      System.err.println("Server to tap: " + server);
+    }
+
 //    super(cf, AddrUtil.getAddresses(cf.getVBucketConfig().getServers()));
+
+    System.err.println("Exiting.");
+    System.exit(0);
+
     this.cf=cf;
     cp = cf.getConfigurationProvider();
     cp.subscribe(cf.getBucketName(), this);
@@ -91,6 +99,7 @@ public class TapConnectionProvider
   }
 
   public void reconfigure(Bucket bucket) {
+    // TODO: restart tap of moving buckets
     ((CouchbaseConnection)conn).reconfigure(bucket);
   }
 

@@ -197,6 +197,8 @@ public class VBucketNodeLocator extends SpyObject implements NodeLocator {
         getLogger().debug("Adding node with hostname %s.",
           hostname);
         getLogger().debug("Node added is %s.", node);
+
+
       }
     }
     // Iterate over the map and check for entries not populated

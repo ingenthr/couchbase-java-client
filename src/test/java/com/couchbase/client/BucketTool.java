@@ -73,6 +73,7 @@ public class BucketTool extends SpyObject {
         List<String> buckets = manager.listBuckets();
         for (int i = 0; i < buckets.size(); i++) {
           manager.deleteBucket(buckets.get(i));
+          Thread.sleep(8000);
         }
       }
 
