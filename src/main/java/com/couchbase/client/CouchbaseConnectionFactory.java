@@ -226,6 +226,12 @@ public class CouchbaseConnectionFactory extends BinaryConnectionFactory {
   }
 
 
+  /**
+   * Return the ConfigurationProvider's config.
+   *
+   *
+   * @return the config itself, or null if a ConfigurationException occurs.
+   */
   public Config getVBucketConfig() {
     try {
       // If we find the config provider associated with this bucket is
@@ -240,7 +246,7 @@ public class CouchbaseConnectionFactory extends BinaryConnectionFactory {
       }
       return configurationProvider.getBucketConfiguration(bucket).getConfig();
     } catch (ConfigurationException e) {
-      return null;
+      return null;  ///// WHAAAA?
     }
   }
 

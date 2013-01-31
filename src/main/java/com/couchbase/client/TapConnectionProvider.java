@@ -44,7 +44,7 @@ public class TapConnectionProvider
   implements Reconfigurable {
 
   private final CouchbaseConnectionFactory cf;
-  private final ConfigurationProvider cp;
+  private final ConfigurationProvider cp = null;
 
   /**
    * Get a tap connection based on the REST response from a Couchbase server.
@@ -70,22 +70,18 @@ public class TapConnectionProvider
    */
   public TapConnectionProvider(CouchbaseConnectionFactory cf)
     throws IOException, ConfigurationException{
-
-    Config vBucketConfig = cf.getVBucketConfig();
-    List<String> servers = vBucketConfig.getServers();
-
-    for (String server : servers) {
-      System.err.println("Server to tap: " + server);
-    }
-
-//    super(cf, AddrUtil.getAddresses(cf.getVBucketConfig().getServers()));
-
-    System.err.println("Exiting.");
-    System.exit(0);
+    super(cf, AddrUtil.getAddresses(cf.getVBucketConfig().getServers()));
+//
+//    Config vBucketConfig = cf.getVBucketConfig();
+//    List<String> servers = vBucketConfig.getServers();
+//
+//    for (String server : servers) {
+//      System.err.println("Server to tap: " + server);
+//    }
+//
+//
 
     this.cf=cf;
-    cp = cf.getConfigurationProvider();
-    cp.subscribe(cf.getBucketName(), this);
   }
 
   /**
